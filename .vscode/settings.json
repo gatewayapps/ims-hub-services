@@ -1,0 +1,26 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+  "[typescript]": {
+    "editor.formatOnSave": true
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.formatOnSave": true
+  },
+  "[jsonc]": {
+    "editor.formatOnSave": true
+  },
+  "javascript.validate.enable": false,
+  "files.exclude": {
+    "dist/": true,
+    "logs/": true,
+    "node_modules/": true
+  },
+  "prettier.tslintIntegration": true,
+  "git.ignoreLimitWarning": true
+}

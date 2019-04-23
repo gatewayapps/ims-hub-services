@@ -1,0 +1,31 @@
+{
+  "defaultSeverity": "error",
+  "rules": {
+    "class-name": false,
+    "curly": true,
+    "eofline": false,
+    "forin": true,
+    "indent": [true, "spaces", 4],
+    "label-position": true,
+    "max-line-length": [true, { "limit": 100, "ignore-pattern": "^import |^export {(.*?)} |^\\s+public async " }],
+    "no-arg": true,
+    "no-bitwise": true,
+    "no-console": [true, "debug", "info", "time", "timeEnd", "trace"],
+    "no-construct": true,
+    "no-debugger": true,
+    "no-duplicate-variable": true,
+    "no-empty": false,
+    "no-eval": true,
+    "no-string-literal": false,
+    "no-trailing-whitespace": true,
+    "no-unused-variable": false,
+    "no-unused-declaration": false,
+    "one-line": [true, "check-open-brace", "check-catch", "check-else", "check-whitespace"],
+    "ordered-imports": false,
+    "radix": true,
+    "semicolon": [true, "never"],
+    "triple-equals": [true, "allow-null-check"],
+    "variable-name": false,
+    "whitespace": [true, "check-branch", "check-decl", "check-operator", "check-separator"]
+  }
+}
