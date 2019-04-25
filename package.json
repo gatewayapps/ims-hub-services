@@ -1,0 +1,24 @@
+{
+  "name": "@gatewayapps/ims-hub-services",
+  "version": "0.0.1",
+  "main": "./dist/index.js",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/core": "^7.4.3",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.11",
+    "@types/node": "^11.13.7",
+    "babel-jest": "^24.7.1",
+    "jest": "^24.7.1",
+    "prettier": "^1.17.0",
+    "prettier-tslint": "^0.4.2",
+    "tslint": "^5.16.0",
+    "typescript": "^3.4.4"
+  },
+  "scripts": {
+    "test": "jest",
+    "prepublish": "yarn test",
+    "build": "npx tsc"
+  }
+}
