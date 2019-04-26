@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "main": "./dist/index.js",
   "dependencies": {
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "waait": "^1.0.4"
   },
   "devDependencies": {
     "@babel/core": "^7.4.3",
