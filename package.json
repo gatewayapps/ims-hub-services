@@ -1,7 +1,10 @@
 {
   "name": "@gatewayapps/ims-hub-services",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "main": "./dist/index.js",
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "isomorphic-fetch": "^2.2.1",
     "waait": "^1.0.4"
@@ -22,7 +25,7 @@
   },
   "scripts": {
     "test": "jest",
-    "prepublish": "yarn test",
+    "prepublishOnly": "yarn test && yarn build",
     "build": "npx tsc"
   }
 }
