@@ -6,4 +6,4 @@ babel.config.js
 jest.config.js
 prettier.config.js
 tsconfig.json
-tsling.json
+tslint.json
