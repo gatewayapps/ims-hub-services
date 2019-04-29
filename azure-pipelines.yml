@@ -9,8 +9,8 @@ jobs:
     inputs:
       versionSpec: '10.x'
   - script: |
-    yarn install
-    yarn test
+      yarn install
+      yarn test
 - job: Publish
   pool:
     name: default
