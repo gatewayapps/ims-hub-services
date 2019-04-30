@@ -11,6 +11,10 @@ export function initializeHubServices(hubUrl: string, packageId: string) {
   PACKAGE_ID = packageId
 }
 
+export function getPackageId(): string | undefined {
+  return PACKAGE_ID
+}
+
 export async function sendHubRequest(
   endpoint: string,
   accessToken: string | undefined,
