@@ -1,5 +1,4 @@
-import { sendHubRequest } from './request'
-import { IPermissionRequestBody } from './types/IPermissionRequestBody'
+import { sendHubRequest, getConfiguration } from './request'
 
 export async function fetchOrderedNodeIdsForPermission(
   role: string = 'user',
@@ -7,12 +6,14 @@ export async function fetchOrderedNodeIdsForPermission(
   treeId: number = 1,
   userAccessToken: string
 ): Promise<number[]> {
-  const endpoint = '/api/hubServices/fetchOrderedNodeIdsForPermission'
-  const body: IPermissionRequestBody = {
-    role,
-    permission,
-    treeId
-  }
+  const { PACKAGE_ID } = getConfiguration()
+  const queryParts = [
+    `role=${encodeURIComponent(role)}`,
+    `permission=${encodeURIComponent(permission)}`,
+    `treeId=${treeId}`,
+    `packageId=${encodeURIComponent(PACKAGE_ID!)}`
+  ]
+  const endpoint = `/api/hubServices/fetchOrderedNodeIdsForPermission?${queryParts.join('&')}`
 
-  return await sendHubRequest(endpoint, userAccessToken, body, 'POST')
+  return await sendHubRequest(endpoint, userAccessToken, undefined, 'GET')
 }

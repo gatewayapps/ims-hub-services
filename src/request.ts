@@ -1,5 +1,5 @@
 const AUTHORIZATION_HEADER = 'x-ims-authorization'
-const PACKAGE_ID_HEADER = ''
+const PACKAGE_ID_HEADER = 'x-ims-package-id'
 const AUTHORIZATION_TYPE = 'JWT'
 let HUB_URL: string | undefined = undefined
 let PACKAGE_ID: string | undefined = undefined
@@ -7,6 +7,13 @@ let PACKAGE_ID: string | undefined = undefined
 export function initializeHubServices(hubUrl: string, packageId: string) {
   HUB_URL = hubUrl
   PACKAGE_ID = packageId
+}
+
+export function getConfiguration() {
+  return {
+    HUB_URL,
+    PACKAGE_ID
+  }
 }
 
 export async function sendHubRequest(
