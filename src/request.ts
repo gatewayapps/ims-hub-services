@@ -1,3 +1,5 @@
+import fetch from 'isomorphic-fetch'
+
 const AUTHORIZATION_HEADER = 'x-ims-authorization'
 const PACKAGE_ID_HEADER = 'x-ims-package-id'
 const AUTHORIZATION_TYPE = 'JWT'
@@ -18,7 +20,7 @@ export function getConfiguration() {
 
 export async function sendHubRequest(
   endpoint: string,
-  accessToken: string,
+  accessToken: string | undefined,
   body: Object | undefined,
   method: string = 'POST'
 ) {
@@ -38,11 +40,16 @@ export async function sendHubRequest(
   return response.json()
 }
 
-export function buildHeadersForRequest(accessToken: string) {
-  return {
+export function buildHeadersForRequest(accessToken: string | undefined) {
+  const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    [AUTHORIZATION_HEADER]: `${AUTHORIZATION_TYPE} ${accessToken}`,
     [PACKAGE_ID_HEADER]: PACKAGE_ID!
   }
+
+  if (accessToken) {
+    headers[AUTHORIZATION_HEADER] = `${AUTHORIZATION_TYPE} ${accessToken}`
+  }
+
+  return headers
 }

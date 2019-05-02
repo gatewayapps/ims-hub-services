@@ -1,0 +1,30 @@
+jobs:
+- job: Test
+  pool:
+    name: default
+    demands:
+      agent.name -equals ubuntu-build-server
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+  - script: |
+      yarn install
+      yarn test
+- job: Publish
+  pool:
+    name: default
+    demands:
+      agent.name -equals ubuntu-build-server
+  dependsOn: Test
+  condition: and(succeeded(), startsWith(variables['Build.SourceBranch'], 'refs/tags/'))
+  steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+  - script: yarn install
+  - task: Npm@1
+    inputs:
+      command: publish
+      publishRegistry: useExternalRegistry
+      publishEndpoint: npmjs
