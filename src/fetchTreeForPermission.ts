@@ -16,5 +16,10 @@ export async function fetchTreeForPermission(
   ]
   const endpoint = `/api/hubServices/fetchTreeForPermission?${queryParts.join('&')}`
 
-  return await sendHubRequest(endpoint, userAccessToken, undefined, 'GET')
+  const result = await sendHubRequest(endpoint, 'GET', userAccessToken, undefined)
+  if (result.success) {
+    return result.data
+  } else {
+    throw result.error
+  }
 }

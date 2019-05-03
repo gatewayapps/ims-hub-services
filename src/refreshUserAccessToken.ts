@@ -27,16 +27,16 @@ async function requestSingleAccessToken(
   const body: IRefreshUserAccessTokenRequestBody = {
     refreshToken
   }
-  const response = await sendHubRequest(endpoint, undefined, body, 'POST')
+  const response = await sendHubRequest(endpoint, 'POST', undefined, body)
   if (response.success) {
     return {
       [packageId]: {
-        expires: response.expires,
-        token: response.accessToken
+        expires: response.data.expires,
+        token: response.data.accessToken
       }
     }
   } else {
-    throw new Error(`Failed to refresh access token: ${response.message}`)
+    throw new Error(`Failed to refresh access token: ${response.error!.message}`)
   }
 }
 
@@ -56,11 +56,11 @@ async function requestMultipleAccessTokens(
     refreshToken
   }
 
-  const response = await sendHubRequest(endpoint, undefined, body, 'POST')
+  const response = await sendHubRequest(endpoint, 'POST', undefined, body)
 
   if (response.success === true) {
-    if (Array.isArray(response.results)) {
-      const result: IRefreshUserAccessTokenResult = response.results.reduce(
+    if (Array.isArray(response.data.results)) {
+      const result: IRefreshUserAccessTokenResult = response.data.results.reduce(
         (res: any, obj: any) => {
           res[obj.packageId] = obj.accessToken
           return res
@@ -72,6 +72,6 @@ async function requestMultipleAccessTokens(
       throw new Error(`Unexpected response from refresh access token. Results is not an array.`)
     }
   } else {
-    throw new Error(`Failed to refresh access token: ${response.message}`)
+    throw new Error(`Failed to refresh access token: ${response.error!.message}`)
   }
 }

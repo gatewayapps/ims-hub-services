@@ -15,5 +15,10 @@ export async function fetchOrderedNodeIdsForPermission(
   ]
   const endpoint = `/api/hubServices/fetchOrderedNodeIdsForPermission?${queryParts.join('&')}`
 
-  return await sendHubRequest(endpoint, userAccessToken, undefined, 'GET')
+  const result = await sendHubRequest(endpoint, 'GET', userAccessToken, undefined)
+  if (result.success) {
+    return result.data
+  } else {
+    throw result.error
+  }
 }

@@ -16,5 +16,10 @@ export async function fetchNodesForPermission(
   ]
   const endpoint = `/api/hubServices/fetchNodesForPermission?${queryParts.join('&')}`
 
-  return await sendHubRequest(endpoint, userAccessToken, undefined, 'GET')
+  const result = await sendHubRequest(endpoint, 'GET', userAccessToken)
+  if (result.success) {
+    return result.data
+  } else {
+    throw result.error
+  }
 }

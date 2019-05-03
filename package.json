@@ -10,16 +10,13 @@
     "waait": "^1.0.4"
   },
   "devDependencies": {
-    "@babel/core": "^7.4.3",
-    "@babel/preset-env": "^7.4.3",
-    "@babel/preset-typescript": "^7.3.3",
     "@types/isomorphic-fetch": "^0.0.35",
     "@types/jest": "^24.0.11",
     "@types/node": "^11.13.7",
-    "babel-jest": "^24.7.1",
     "jest": "^24.7.1",
     "prettier": "^1.17.0",
     "prettier-tslint": "^0.4.2",
+    "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
     "typescript": "^3.4.4"
   },
