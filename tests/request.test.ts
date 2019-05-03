@@ -10,7 +10,6 @@ import {
   AUTHORIZATION_TYPE,
   SIGNATURE_HEADER
 } from '../src/request'
-import { isTryStatement } from '@babel/types'
 
 const packageId = 'ims.packages.test'
 const acceptHeader = 'application/json'
