@@ -17,7 +17,6 @@ describe('signDataWithSecret', () => {
   it('should throw an error when called with data that is not a string or object', () => {
     const testBody: any = 123456
     const testSecret = 'abc123'
-
     expect(() => signDataWithSecret(testBody, testSecret)).toThrow(TypeError)
   })
 })

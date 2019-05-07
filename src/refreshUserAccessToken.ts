@@ -27,7 +27,7 @@ async function requestSingleAccessToken(
   const body: IRefreshUserAccessTokenRequestBody = {
     refreshToken
   }
-  const response = await sendHubRequest(endpoint, 'POST', undefined, body)
+  const response = await sendHubRequest(endpoint, 'POST', body)
   if (response.success) {
     return {
       [packageId]: {
@@ -56,7 +56,7 @@ async function requestMultipleAccessTokens(
     refreshToken
   }
 
-  const response = await sendHubRequest(endpoint, 'POST', undefined, body)
+  const response = await sendHubRequest(endpoint, 'POST', body)
 
   if (response.success === true) {
     if (Array.isArray(response.data.results)) {

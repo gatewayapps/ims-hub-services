@@ -27,7 +27,7 @@ async function attemptUpdatePackageMetadata(
   let result: any
   try {
     const endpoint = '/api/package/metadata'
-    result = await sendHubRequest(endpoint, 'POST', undefined, body)
+    result = await sendHubRequest(endpoint, 'POST', body)
   } catch (err) {
     result = {
       success: false,

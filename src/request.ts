@@ -1,21 +1,22 @@
 import 'isomorphic-fetch'
 import { IHubServiceResponse } from './types/IHubServiceResponse'
+import { parse } from 'url'
+import { signDataWithSecret } from './signDataWithSecret'
+import constants from './constants'
 
-export const SIGNATURE_HEADER = 'x-ims-signature'
-export const AUTHORIZATION_HEADER = 'x-ims-authorization'
-export const PACKAGE_ID_HEADER = 'x-ims-package-id'
-export const AUTHORIZATION_TYPE = 'JWT'
-let HUB_URL: string | undefined = undefined
-let PACKAGE_ID: string | undefined = undefined
+let HUB_URL: string | undefined = ''
+let PACKAGE_ID: string | undefined = ''
+let PACKAGE_SECRET: string | undefined = ''
 
 /**
  * Prepare hub services variables
  * @param hubUrl The URL where the hub is located
  * @param packageId The package consuming the hub services
  */
-export function initializeHubServices(hubUrl: string, packageId: string) {
+export function initializeHubServices(hubUrl: string, packageId: string, packageSecret: string) {
   HUB_URL = hubUrl
   PACKAGE_ID = packageId
+  PACKAGE_SECRET = packageSecret
 }
 
 /**
@@ -24,7 +25,8 @@ export function initializeHubServices(hubUrl: string, packageId: string) {
 export function getConfiguration() {
   return {
     HUB_URL,
-    PACKAGE_ID
+    PACKAGE_ID,
+    PACKAGE_SECRET
   }
 }
 
@@ -39,11 +41,9 @@ export function getConfiguration() {
 export async function sendHubRequest(
   endpoint: string,
   method: string = 'POST',
-  accessToken?: string,
-  body?: Object,
-  signature?: string
+  body?: Object
 ): Promise<IHubServiceResponse> {
-  if (!HUB_URL || !PACKAGE_ID) {
+  if (!HUB_URL || !PACKAGE_ID || !PACKAGE_SECRET) {
     throw new Error('You must call initializeHubServices before consuming any hub services')
   }
 
@@ -52,7 +52,9 @@ export async function sendHubRequest(
   }
 
   const href = new URL(endpoint, HUB_URL)
-  const headers = buildHeadersForRequest(PACKAGE_ID, accessToken, signature)
+  const signature = getSignatureForRequest(PACKAGE_SECRET, method, href.href, body)
+
+  const headers = buildHeadersForRequest(PACKAGE_ID, signature)
 
   return sendRequestAndHandleResponse(href.href, {
     method,
@@ -61,8 +63,16 @@ export async function sendHubRequest(
   })
 }
 
+export function getSignatureForRequest(secret: string, method: string, url: string, body?: Object) {
+  const parsedUrl = parse(url)
+  return /GET/i.test(method)
+    ? signDataWithSecret(parsedUrl.query || '', secret)
+    : signDataWithSecret(body || {}, secret)
+}
+
 export async function sendRequestAndHandleResponse(url: string, options: RequestInit) {
   try {
+    console.log('URL IS', url)
     const response = await fetch(url, options)
     const data = await response.json()
     return {
@@ -85,20 +95,17 @@ export async function sendRequestAndHandleResponse(url: string, options: Request
  */
 export function buildHeadersForRequest(
   packageId: string,
-  accessToken?: string,
+
   signature?: string
 ) {
   const headers = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
-    [PACKAGE_ID_HEADER]: packageId
+    [constants.PackageIdHeader]: packageId
   }
 
-  if (accessToken) {
-    headers[AUTHORIZATION_HEADER] = `${AUTHORIZATION_TYPE} ${accessToken}`
-  }
   if (signature) {
-    headers[SIGNATURE_HEADER] = signature
+    headers[constants.SignatureHeader] = signature
   }
 
   return headers
