@@ -1,8 +1,12 @@
+export { default as constants } from './constants'
+
 /* Functions */
 export { buildTreeFromOrderedNodeIds } from './buildTreeFromOrderedNodeIds'
 export { fetchTree } from './fetchTree'
 export { fetchTreeData } from './fetchTreeData'
 export { fetchUsers } from './fetchUsers'
+export { fetchNodeUserAccountIds } from './fetchNodeUserAccountIds'
+export { fetchNodeLineage } from './fetchNodeLineage'
 export { refreshUserAccessToken } from './refreshUserAccessToken'
 export { initializeHubServices, sendHubRequest } from './request'
 export { signDataWithSecret } from './signDataWithSecret'

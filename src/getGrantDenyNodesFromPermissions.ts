@@ -28,7 +28,7 @@ export function findMatchingPermissions(permissions, roleAction) {
   const roleCheckValue = constants.RoleValues[permission.role]
   return permissions.filter((p) => {
     return (
-      p.package === this.ImsConfig.package.id &&
+      p.package === getConfiguration().PACKAGE_ID &&
       ((p.role === permission.role && (p.action === permission.action || p.action === '*')) ||
         (constants.RoleValues[p.role] > roleCheckValue && p.action === '*'))
     )
@@ -38,14 +38,6 @@ export function findMatchingPermissions(permissions, roleAction) {
 export function createPermissionFromString(permissionString) {
   var parts = permissionString.split(':')
 
-  // is this missing type or package
-  // if (parts[0] !== '+' || parts[0] !== '-') {
-  //   parts.splice(0, 0, '+')
-  // }
-  // if (parts[1] !== this.ImsConfig.package.id) {
-  //   parts.splice(1, 0, this.ImsConfig.package.id)
-  // }
-
   if (parts.length === 2 || parts.length === 4) {
     // Did we include a type and package id
     if (
@@ -54,7 +46,7 @@ export function createPermissionFromString(permissionString) {
       parts[0] === constants.Roles.Administrator
     ) {
       // prepend grant and package
-      parts.splice(0, 0, this.ImsConfig.package.id)
+      parts.splice(0, 0, getConfiguration().PACKAGE_ID)
       parts.splice(0, 0, '+')
     }
 
