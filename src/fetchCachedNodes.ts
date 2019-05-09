@@ -1,13 +1,13 @@
 import { sendHubRequest } from './request'
 
-import { ICompactNode } from './types/ICompactNode'
+import { ICachedNode } from './types/ICachedNode'
 
-export async function fetchNodeLineage(nodeId: number): Promise<{ [key: number]: ICompactNode }> {
+export async function fetchCachedNodes(nodeIds: number[]): Promise<ICachedNode[]> {
   const body = {
-    nodeId
+    nodeIds
   }
 
-  const endpoint = `/api/hubServices/fetchNodeLineage`
+  const endpoint = `/api/hubServices/fetchCachedNodes`
 
   const result = await sendHubRequest(endpoint, 'POST', body)
   if (result.success) {
