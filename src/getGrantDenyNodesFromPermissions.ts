@@ -68,7 +68,6 @@ export function createPermissionFromString(permissionString) {
   }
 
   retVal = fillMissingPermissionValues(retVal)
-  // console.log('Generated permission object', retVal)
   return retVal
 }
 

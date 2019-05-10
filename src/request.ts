@@ -72,7 +72,6 @@ export function getSignatureForRequest(secret: string, method: string, url: stri
 
 export async function sendRequestAndHandleResponse(url: string, options: RequestInit) {
   try {
-    console.log('URL IS', url)
     const response = await fetch(url, options)
     const data = await response.json()
     return {
