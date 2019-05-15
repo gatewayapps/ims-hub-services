@@ -1,6 +1,4 @@
 import { sendHubRequest } from './request'
-import { I_v_UserAccount } from './types/I_v_UserAccount'
-import { I_v_NodeCache } from './types/I_v_NodeCache'
 import { ICachedNode } from './types/ICachedNode'
 
 export async function fetchNodesOfType(nodeTypeId: number): Promise<ICachedNode[]> {
