@@ -5,7 +5,8 @@ export interface I_v_UserAccount {
   fullName?: string | null
   displayName?: string | null
   jobTitle?: string | null
-  hireDate?: Date
+  hireDate?: Date | null
+  createdDate: Date
   positionStartDate?: Date | null
   isTerminated: boolean
   externalId?: string | null
