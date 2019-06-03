@@ -1,22 +1,14 @@
-import { sendHubRequest } from './request'
 import { I_v_UserAccount } from './types/I_v_UserAccount'
+import { getCacheInstance } from './hubCache'
+import { ensureNumericNodeIds } from './ensureNumericNodeIds'
 
 export async function fetchUsers(
   includeNodes: (string | number)[] = [],
   excludeNodes: (string | number)[] = []
 ): Promise<I_v_UserAccount[]> {
-  const body = {
-    include: includeNodes,
-    exclude: excludeNodes,
-    treeId: 1
-  }
+  const cacheService = getCacheInstance()
+  const finalIncludeNodes = ensureNumericNodeIds(includeNodes, 1, true)
+  const finalExcludeNodes = ensureNumericNodeIds(excludeNodes, 1)
 
-  const endpoint = `/api/hubServices/fetchUsers`
-
-  const result = await sendHubRequest(endpoint, 'POST', body)
-  if (result.success) {
-    return result.data
-  } else {
-    throw result.error
-  }
+  return cacheService.getDescendantUsers(finalIncludeNodes, finalExcludeNodes)
 }

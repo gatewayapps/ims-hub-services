@@ -39,3 +39,5 @@ export { IPackageMetadataRequestBody } from './types/IPackageMetadataRequestBody
 export { IRefreshUserAccessTokenRequestBody } from './types/IRefreshUserAccessTokenRequestBody'
 export { IRefreshUserAccessTokenResult } from './types/IRefreshUserAccessTokenResult'
 export { IUserToken } from './types/IUserToken'
+
+export { HubCache, getCacheInstance } from './hubCache'
