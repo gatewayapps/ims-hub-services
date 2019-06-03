@@ -103,9 +103,6 @@ export class HubCache {
   }
 
   public getCachedUsers(userAccountIds: number[]): I_v_UserAccount[] {
-    if (userAccountIds.length === 0) {
-      return Object.values(this.userHashMap)
-    }
     return userAccountIds.map(
       (userAccountId) => this.userHashMap[this.userNodeHashMap[userAccountId]]
     )
@@ -193,7 +190,6 @@ export class HubCache {
   }
 
   public async loadNodeCache() {
-    console.log('LOAD NODE CACHE CALLED')
     debug(`loadNodeCache`)
     const endpoint = `/api/hubServices/refreshHubData`
 
