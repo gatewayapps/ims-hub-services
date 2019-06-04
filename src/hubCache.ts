@@ -228,7 +228,6 @@ export class HubCache {
   public getLastUpdatedAt = () => this.lastUpdatedAt
 }
 export const getCacheInstance = () => {
-  debug('Requesting instance of HubCache')
   if (!instance) {
     instance = new HubCache(true)
   }
