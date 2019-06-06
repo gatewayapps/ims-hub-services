@@ -1,24 +1,22 @@
-import { sendHubRequest } from './request'
-
 import { ICachedNode } from './types/ICachedNode'
+import { ensureNumericNodeIds } from './ensureNumericNodeIds'
+import { getCacheInstance } from './hubCache'
 
 export async function fetchTreeData(
   includeNodes: (string | number)[] = [],
   excludeNodes: (string | number)[] = [],
   treeId: number = 1
 ): Promise<{ nodeHashMap: { [key: number]: ICachedNode }; orderedNodeIds: number[] }> {
-  const body = {
-    include: includeNodes,
-    exclude: excludeNodes,
+  const cacheService = getCacheInstance()
+  const finalIncludeNodes = ensureNumericNodeIds(includeNodes, treeId, true)
+  const finalExcludeNodes = ensureNumericNodeIds(excludeNodes, treeId)
+
+  const nodeHashMap = cacheService.getNodes(finalIncludeNodes, finalExcludeNodes, treeId)
+  const orderedNodeIds = cacheService.getOrderedNodeIds(
+    finalIncludeNodes,
+    finalExcludeNodes,
     treeId
-  }
+  )
 
-  const endpoint = `/api/hubServices/fetchTreeData`
-
-  const result = await sendHubRequest(endpoint, 'POST', body)
-  if (result.success) {
-    return result.data
-  } else {
-    throw result.error
-  }
+  return { nodeHashMap, orderedNodeIds }
 }

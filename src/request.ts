@@ -1,3 +1,4 @@
+const debug = require('debug')('ims-hub-services')
 import 'isomorphic-fetch'
 import { IHubServiceResponse } from './types/IHubServiceResponse'
 import { parse } from 'url'
@@ -14,6 +15,7 @@ let PACKAGE_SECRET: string | undefined = ''
  * @param packageId The package consuming the hub services
  */
 export function initializeHubServices(hubUrl: string, packageId: string, packageSecret: string) {
+  debug(`Initializing hub services for ${packageId}`)
   HUB_URL = hubUrl
   PACKAGE_ID = packageId
   PACKAGE_SECRET = packageSecret
@@ -73,6 +75,9 @@ export function getSignatureForRequest(secret: string, method: string, url: stri
 export async function sendRequestAndHandleResponse(url: string, options: RequestInit) {
   try {
     const response = await fetch(url, options)
+    if (response.status === 304) {
+      return { success: true }
+    }
     const data = await response.json()
     return {
       success: true,
