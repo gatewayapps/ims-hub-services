@@ -189,7 +189,7 @@ export class HubCache {
     }
   }
 
-  public async loadNodeCache() {
+  public loadNodeCache = async () => {
     debug(`loadNodeCache`)
     const endpoint = `/api/hubServices/refreshHubData`
 
