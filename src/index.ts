@@ -18,7 +18,7 @@ export { updatePackageMetadata } from './updatePackageMetadata'
 export { getNodesFromPermissions } from './getNodesFromPermissions'
 export { getUserFromCache, getUsersFromCache } from './userCache'
 export { getNodeFromCache, getNodesFromCache } from './nodeCache'
-
+export {UserFilterOptions, getUserAccountsRaw} from './getUserAccountsRaw'
 /* Types */
 export { I_v_NodeCache } from './types/I_v_NodeCache'
 export { ICompactNode } from './types/ICompactNode'
