@@ -18,4 +18,5 @@ export interface I_v_UserAccount {
   email?: string | null
   birthday?: Date | null
   cellPhone?: string | null
+  status?: number | null
 }
