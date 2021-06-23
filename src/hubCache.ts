@@ -20,7 +20,7 @@ export class HubCache {
   protected orderedNodeIds: number[] = []
 
   protected nodeArrayContainsAncestor(node: ICachedNode, nodeIds: number[]) {
-    return nodeIds.some((possibleAncestor) => node.ancestorIds!.includes(possibleAncestor))
+    return nodeIds.some((possibleAncestor) => node && node.ancestorIds!.includes(possibleAncestor))
   }
 
   /**
@@ -46,6 +46,7 @@ export class HubCache {
     const result = node.descendantIds!.filter(
       (id) =>
         // Ensure none of this descendants ancestors appear in the exclusion list
+        this.nodeHashMap[id] &&
         !this.nodeHashMap[id].ancestorIds!.some((ancestor) => excludedNodeIds.includes(ancestor)) &&
         // Ensure this descendant is not in the exclusion list
         !excludedNodeIds.includes(id)

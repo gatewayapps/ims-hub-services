@@ -17,7 +17,7 @@
   },
   "javascript.validate.enable": false,
   "files.exclude": {
-    "dist/": true,
+    "dist/": false,
     "logs/": true,
     "node_modules/": true
   },
