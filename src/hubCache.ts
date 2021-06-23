@@ -43,6 +43,10 @@ export class HubCache {
     node: ICachedNode,
     excludedNodeIds: number[]
   ): number[] {
+    if (!node) {
+      return []
+    }
+
     const result = node.descendantIds!.filter(
       (id) =>
         // Ensure none of this descendants ancestors appear in the exclusion list
@@ -67,7 +71,9 @@ export class HubCache {
     treeId: number
   ): number[][] {
     const distinctRoots = this.removeOverlappingRoots(rootNodeIds)
-    const finalRoots = distinctRoots.filter((rootId) => !excludedNodeIds.includes(rootId))
+    const finalRoots = distinctRoots.filter(
+      (rootId) => !excludedNodeIds.includes(rootId) && this.nodeHashMap[rootId]
+    )
 
     const validDescendantArrays = finalRoots.map((root) =>
       this.applyExclusionsToNodeDescendants(this.nodeHashMap[root], excludedNodeIds)
