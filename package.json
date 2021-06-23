@@ -1,6 +1,6 @@
 {
   "name": "@gatewayapps/ims-hub-services",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "main": "./dist/index.js",
   "publishConfig": {
     "access": "public"
