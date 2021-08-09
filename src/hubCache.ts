@@ -91,6 +91,24 @@ export class HubCache {
     })
   }
 
+  public getNodeAncestorIds (nodeId: number): number[] {
+    const node = this.nodeHashMap[nodeId]
+    if(node){
+      return node.ancestorIds || []
+    } else {
+      return []
+    }
+  }
+
+  public getNodeDescendantIds (nodeId: number): number[] {
+    const node = this.nodeHashMap[nodeId]
+    if(node){
+      return node.descendantIds || []
+    } else {
+      return []
+    }
+  }
+
   public getLineageForNode(nodeId: number): { [key: number]: ICompactNode } {
     const node = this.nodeHashMap[nodeId]
     if (!node) {
