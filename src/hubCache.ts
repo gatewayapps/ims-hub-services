@@ -217,7 +217,7 @@ export class HubCache {
   public loadNodeCache = async () => {
     debug(`loadNodeCache`)
     const endpoint = `/api/hubServices/refreshHubData`
-
+    try {
     const result = await sendHubRequest(endpoint, 'POST', { lastUpdated: this.lastUpdatedAt })
 
     if (result.success) {
@@ -247,8 +247,14 @@ export class HubCache {
         this.lastUpdatedAt = cacheData.lastUpdatedAt
       }
     } else {
-      throw result.error
+      console.error(result.error)
+
     }
+  } catch(err){
+    console.error(err)
+    this.lastUpdatedAt = 0
+  }
+  
   }
   public getLastUpdatedAt = () => this.lastUpdatedAt
 }
