@@ -16,5 +16,8 @@ export default {
   SignatureHeader: 'x-ims-signature',
   AuthorizationHeader: 'x-ims-authorization',
   PackageIdHeader: 'x-ims-package-id',
-  AuthorizationType: 'JWT'
+  AuthorizationType: 'JWT',
+  RedisNodeCacheChannel: 'NODE_CACHE',
+  RedisNodeCacheUpdatedMessage: 'CACHE_UPDATED',
+  RedisNodeCacheKey: 'NODE_CACHE'
 }

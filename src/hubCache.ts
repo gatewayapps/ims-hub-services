@@ -1,10 +1,19 @@
 const debug = require('debug')('ims-hub-services')
-import { ICachedNode, I_v_UserAccount, ICompactNode } from '.'
-import { sendHubRequest } from './request'
+
+import { createClient } from 'redis'
+
+import { ICachedNode, I_v_UserAccount, ICompactNode, constants } from '.'
 
 let instance: HubCache | undefined = undefined
-
+export type RedisClient = ReturnType<typeof createClient>
+export type ClientOpts = {
+  username?: string
+  password?: string
+  hostname?: string
+}
 export class HubCache {
+  protected redisClient!: RedisClient
+  private redisSubscriptionClient!: RedisClient
   protected lastUpdatedAt: number = 0
 
   // Map of nodeIds to ICachedNode
@@ -91,18 +100,18 @@ export class HubCache {
     })
   }
 
-  public getNodeAncestorIds (nodeId: number): number[] {
+  public getNodeAncestorIds(nodeId: number): number[] {
     const node = this.nodeHashMap[nodeId]
-    if(node){
+    if (node) {
       return node.ancestorIds || []
     } else {
       return []
     }
   }
 
-  public getNodeDescendantIds (nodeId: number): number[] {
+  public getNodeDescendantIds(nodeId: number): number[] {
     const node = this.nodeHashMap[nodeId]
-    if(node){
+    if (node) {
       return node.descendantIds || []
     } else {
       return []
@@ -204,63 +213,91 @@ export class HubCache {
       .map((node) => node.nodeId)
   }
 
-  constructor(isConsumer: boolean = true) {
+  constructor(redisOptions: ClientOpts, isConsumer: boolean = true) {
     debug(`HubCache constructor - isConsumer: ${isConsumer}`)
-    if (isConsumer) {
-      // We should  start an interval to update the cache regularly
-      // Every 1 minute check with the hub for new data
-      setInterval(this.loadNodeCache, 60000)
-      this.loadNodeCache()
+    this.initializeRedisConnection(redisOptions)
+      .then(async () => {
+        if (isConsumer) {
+          // We should  start an interval to update the cache regularly
+          // Every 30 minutes we should force an update
+          setInterval(this.loadNodeCache, 60000 * 30)
+
+          await this.redisSubscriptionClient.connect()
+
+          this.redisSubscriptionClient.subscribe(
+            constants.RedisNodeCacheChannel,
+            async (message, channel) => {
+              if (message === constants.RedisNodeCacheUpdatedMessage) {
+                console.info('Loading cache from redis trigger')
+                await this.loadNodeCache()
+              }
+            }
+          )
+          this.loadNodeCache()
+        }
+      })
+      .catch((err) => {
+        console.error(err)
+      })
+  }
+
+  protected async initializeRedisConnection(opts: ClientOpts) {
+    if (!this.redisClient) {
+      this.redisClient = createClient(opts)
+      this.redisSubscriptionClient = createClient(opts)
+      this.redisClient.on('error', (message) => {
+        console.error(message)
+      })
+      await this.redisClient.connect()
     }
   }
 
   public loadNodeCache = async () => {
     debug(`loadNodeCache`)
-    const endpoint = `/api/hubServices/refreshHubData`
+
     try {
-    const result = await sendHubRequest(endpoint, 'POST', { lastUpdated: this.lastUpdatedAt })
-
-    if (result.success) {
-      if (!result.data) {
-        // no new data
-      } else {
-        const cacheData: {
-          nodeHashMap: {
-            [key: number]: ICachedNode
-          }
-          userHashMap: {
-            [key: number]: I_v_UserAccount
-          }
-          userNodeHashMap: {
-            [key: number]: number
-          }
-          orderedNodeIds: number[]
-          lastUpdatedAt: number
-        } = result.data
-
-        debug('Updating local cache with new data')
-
-        this.nodeHashMap = cacheData.nodeHashMap
-        this.userHashMap = cacheData.userHashMap
-        this.userNodeHashMap = cacheData.userNodeHashMap
-        this.orderedNodeIds = cacheData.orderedNodeIds
-        this.lastUpdatedAt = cacheData.lastUpdatedAt
+      const jsonValue = await this.redisClient.get(constants.RedisNodeCacheKey)
+      if (jsonValue === null) {
+        console.error(`No cache value found with key ${constants.RedisNodeCacheKey}`)
+        return
       }
-    } else {
-      console.error(result.error)
+      const data = JSON.parse(jsonValue)
 
+      const cacheData: {
+        nodeHashMap: {
+          [key: number]: ICachedNode
+        }
+        userHashMap: {
+          [key: number]: I_v_UserAccount
+        }
+        userNodeHashMap: {
+          [key: number]: number
+        }
+        orderedNodeIds: number[]
+        lastUpdatedAt: number
+      } = data
+
+      debug('Updating local cache with new data')
+
+      this.nodeHashMap = cacheData.nodeHashMap
+      this.userHashMap = cacheData.userHashMap
+      this.userNodeHashMap = cacheData.userNodeHashMap
+      this.orderedNodeIds = cacheData.orderedNodeIds
+      this.lastUpdatedAt = cacheData.lastUpdatedAt
+    } catch (err) {
+      console.error(err)
+      this.lastUpdatedAt = 0
     }
-  } catch(err){
-    console.error(err)
-    this.lastUpdatedAt = 0
-  }
-  
   }
   public getLastUpdatedAt = () => this.lastUpdatedAt
 }
 export const getCacheInstance = () => {
   if (!instance) {
-    instance = new HubCache(true)
+    // const hostname = process.env.REDIS_HOSTNAME || 'localhost'
+    const username = process.env.REDIS_USERNAME || 'ims-package'
+    const password = process.env.REDIS_PASSWORD || 'IMS_PACKAGE'
+
+    instance = new HubCache({ username, password }, true)
   }
   return instance
 }

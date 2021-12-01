@@ -1,6 +1,6 @@
 {
   "name": "@gatewayapps/ims-hub-services",
-  "version": "0.7.1",
+  "version": "2.0.0",
   "main": "./dist/index.js",
   "publishConfig": {
     "access": "public"
@@ -13,6 +13,7 @@
     "debug": "^4.1.1",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.11",
+    "redis": "^4.0.0",
     "waait": "^1.0.4"
   },
   "devDependencies": {
@@ -24,7 +25,7 @@
     "prettier-tslint": "^0.4.2",
     "ts-jest": "^24.0.2",
     "tslint": "^5.16.0",
-    "typescript": "^3.4.4"
+    "typescript": "^3.9.10"
   },
   "scripts": {
     "test": "jest",
